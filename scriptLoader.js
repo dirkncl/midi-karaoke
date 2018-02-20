@@ -77,9 +77,9 @@ var JSfiles = [
  ["MIDI.FileHeader.js"],
  ["MIDI.FileTrack.js"],
  ["MIDI.File.js"],
- ["MIDI.Player.js"],
+ ["MIDI.Player2.js"],
  ["MIDI.LyricsDisplayer.js"],
- ["MIDI.Application.js"]
+ ["MIDI.Application2.js"]
 ];
 cssLoad("Style.css");
 jsLoad(JSfiles);
