@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+	  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	  <title>MIDIWebKaraoke: MIDI Karaoke files player</title>
+	  <meta name="description" content="Play MIDI Karaoke (.kar .mid) files in your browser !" />
+	  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+	  <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAABuwAAAbsBOuzj4gAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAJXSURBVDiNfZNdSJNRGMf/57zvPtyHS1xTc6SNStaHWOJQUJOIki60i+a9kYOC6KKbCIpXpEjCuqpugiD6WkPKmxmpjD6IcpFBRRBiTSe05qzQ5ebmnm58T9tcPTfnPP/z/H/n4XwwIgIAhtwgrI38GgAgGQB7cidwlIjsAEAZIqPFeL2lszGiGt8EJrbNhee7ljNJB2M8IUMTTiVTwY6e9mHZ5/Px4fMvB2Y+zZpVbOfJA8HWQ01+RVHYPld7413l4dPP41Oyum4uNSUrHLaWjp524gDA2Nr2iIjtctafuH128EW2udReQtV19qar4xeDACDnGwFAMrDS+7e8gcCVYOvUu2mhlzmsaDy+g2nN8oKqFQTo12uujV56bQx9CAut0lkOl8cJ2SABgB3A5D8B/v5nxp+RXyKvqqtE/ZEaSDquSvb/dpBttlVb4fI4ASmnpFKd8Hg8rmUSKyoEAoDvX+eQDkvgnGfL5QKQTqfLCt0Cl/8ahvpHwGM6MCbKtKLOYrHMZNK0lG3e09OAtmMNIs+sZDCoPIZ2yaBCNAKwOuY8XevWdbDuLIarq1Zoy4kUHimj0GeMYIzp8gE5QUncI6LFqr021DQ7hL74I47hC89hkoure3t7uQDQ6o9SYyXKvRqNxgGGc9u7qiIVW2xiLTodw9jAq+b9roO7GWOMu91uSiVSOWeQWEjGu7u7ox6Pp0/SSRtrD28+YyoxiE1CH2f5zdPeIf+NMRMjIpxqU/Sx+Zi46dn3kd8j9CCnqz73Za20aWWD2VZUH59LTIRGot8m335Z+gMj5tLKAVDGNAAAAABJRU5ErkJggg==" />
+    <script src="scriptLoader.js" type="text/javascript"></script>
+  </head>
+  <body>
+    <div id="current"></div>
+    <input type="file" style="display:none" />
+  	<div class="player">
+		  <p>
+		  	<a href="#" onclick="app.pickFile()" title="Pick karaoke files" disabled="disable" class="pick"><span>Pick</span></a><!--
+			  <a href="#" onclick="app.previous" title="Go to the previous song" disabled="disabled" class="previous"><span>Previous</span></a>
+			  <a href="#" onclick="app.next" title="Go to the next song" disabled="disabled" class="next"><span>Next</span></a>-->
+			  <span class="separator"></span>
+			  <a href="#" onclick="app.play()" title="Play the selected song" disabled="disable" class="play"><span>Play</span></a>
+			  <a href="#" onclick="app.pause()" title="Pause the selected song" disabled="disable" class="pause"><span>Pause</span></a>
+			  <a href="#" onclick="app.stop()" title="Stop playing the selected song" disabled="disable" class="stop"><span>Stop</span></a><!--
+			  <span class="separator"></span>
+			  <a href="#" onclick="app.backward" title="Go backward" disabled="disabled" class="backward"><span>Backward</span></a>
+			  <a href="#" onclick="app.forward" title="Go forward" disabled="disabled" class="forward"><span>Forward</span></a>-->
+			  <span class="separator"></span>
+			  <a href="#" onclick="app.volume('mute')" title="Make texts smaller" disabled="disable" class="volumemute"><span>Mute sound</span></a>
+			  <a href="#" onclick="app.volume('less')" title="Increase the volume level" disabled="disable" class="volumedown"><span>Volume down</span></a>
+			  <a href="#" onclick="app.volume('more')" title="Decrease the volume level" disabled="disable" class="volumeup"><span>Volume up</span></a>
+			  <span class="separator"></span>
+			  <a href="#" onclick="app.lyricsDisplayer.setTextSize('click','smaller')" title="Make texts smaller"disabled="disable" class="textsmaller"><span>A-</span></a>
+			  <a href="#" onclick="app.lyricsDisplayer.setTextSize('click','bigger')" title="Make texts bigger" disabled="disable" class="textbigger"><span>A+</span></a>
+			  <span class="separator"></span>
+			  <a href="#" onclick="app.selectOutput()" title="Change output" disabled="disable" class="outputselect"><span>O</span></a>
+		  </p>
+	  </div>
+
+    <div class="lirik" id="text">
+      <div class="lyrics"></div>
+    </div>
+    
+  	<div class="popins">
+      <div class="popin" id="nooutput">
+			  <h2>No MIDI output!</h2>
+			  <p>
+			    Despite the fact you could play MIDI, it appears you have no MIDI output
+			    available. You could plug a MIDI synthetizer or even install a software
+			    one.
+			  </p>
+		  </div>
+	  	<div class="popin" id="jazz">
+			  <h2>Enable MIDI output!</h2>
+			  <p>You must enable MIDI output by doing one of the two suggested setup steps.</p>
+			  <p>After the step, just restart your browser, come back here and have fun!</p>
+			  <h3>For Google Chrome: Activate the Web MIDI API</h3>
+			  <p>
+			    With Google Chrome, you can activate the Web MIDI API in Chrome to enjoy
+			    this player. To do so, just enable this experimental feature by
+			    copy/pasting the following link in your address bar and checking if
+			    the Web MIDI API is enabled: <br />
+			    <strong>chrome://flags/#enable-web-midi</strong>
+			  </p>
+			  <h3>Otherwise, install the Jazz plug-in</h2>
+			  <p>
+			    This MIDI Karaoke player is using a very early web technology currently
+			    under standardization process.
+			  </p>
+			  <p>
+			    In order to enjoy this karaoke experience under Windows and
+			    MacOSX, please <a href="#" onclick="http://jazz-soft.net/download/Jazz-Plugin/"
+			      title="Download the plug-in">download the Jazz MIDI plug-in</a>,
+			    restart your browser and come back here!
+		  	</p>
+		  </div>
+      
+		  <div class="popin" id="output">
+			  <form action="app.setOutput('enable')">
+			    <p><label>Outputs:<select id="outputChooser"></select></label></p>
+			  </form>
+        <a href="#" onclick="app.closePopin('none','output')"><span><button>Cancel</button></span></a>
+        <a href="#" onclick="app.panic()" title="panic" disabled="disabled" class="panic"><span><button>Panic</button></span></a>
+      </div>
+    
+		  <div class="popin" id="about" style="display:none">
+			  <h2><span>MIDIWebKaraoke</span></h2>
+			  <p>
+			    MIDIWebKaraoke is an online application allowing you to play the MIDI
+			    Karaoke files (.kar) or even MIDI files (.mid) containing lyrics.
+			  </p>
+			  <p>
+			    MIDIWebKaraoke doesn't provide karaoke files, but you can find many
+			    Karaoke files on <a href="#" onclick="http://www.midaoke.com/artists/a_e/index.html" title="Find some KAR files">a</a> <a href="#" onclick="http://midkar.com/" title="Find some more KAR files">lot</a> of websites on the web
+			  </p>
+        <p>
+        </p>
+        <p><a href="#" onclick="app.closePopin('none','about')" title="Close this popin">Close</a></p>
+		  </div>
+    
+	  </div>
+    <script>
+
+  </script>
+  
+
+  <div style="position:absolute; bottom:2px;right:2px; z-index:1000" class="pick">
+    <!--input style="display:block" id="myfiles" type="file" name="myFiles" accept="audio/x-midi" multiple webkitdirectory onchange="GetFiles()"-->
+    <div>
+    <label class="filebutton">Choose Dir!<span>
+      <input style="display:block" id="myDir" type="file" name="myDir" accept="audio/x-midi" multiple webkitdirectory onchange="GetDir()">
+    </span></label> or 
+
+    <label class="filebutton">Choose Files!<span>
+    <input style="display:block" id="myfiles" type="file" name="myFiles" accept="audio/x-xmidi" multiple onchange="GetFiles()">
+   </span></label></div>
+    <div id="selectfile" style="width:30px"></div>
+    <button id='random' onclick='PlayRandom()'>Random</button>
+    <button id='prev' onclick='PlayPrev()'><<</button>
+    <button id='next' onclick='PlayNext()'>>></button>
+    <input id="XX" type="button"">
+    <!--input id="YY" type="button"">
+    <!--button id='all' onclick='nextSong()'>All</button>
+    <button id='clear' onclick='clear()'>Clear</button-->
+  </div>
+  
+  </body>
+</html>
